@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, FlatList} from 'react-native';
+import {View, Text, FlatList, TouchableOpacity} from 'react-native';
 import axios from 'axios';
 
 import styles from './styles';
@@ -12,7 +12,7 @@ class Homepage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: 'Ascii Faces',
+      title: 'Ascii Faces Store',
       faces: [],
       page: 1,
       limit: 20,
@@ -54,12 +54,36 @@ class Homepage extends React.Component {
     );
   }
 
+  handleSort(input) {
+    this.setState({sort: input});
+  }
+
   render() {
     console.log('state-----', this.state);
+    const {sort} = this.state;
     return (
       <View style={styles.container}>
-        <Text>{this.state.title}</Text>
-        <Text>Filter</Text>
+        <Text style={[styles.title, styles.textCenter]}>
+          {this.state.title}
+        </Text>
+        <View style={styles.containerFilter}>
+          <Text style={styles.title}>Filter</Text>
+          <TouchableOpacity
+            style={styles.containerFilterContent(sort === 'size')}
+            onPress={() => this.handleSort('size')}>
+            <Text style={styles.textFilter(sort === 'size')}>Size</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.containerFilterContent(sort === 'price')]}
+            onPress={() => this.handleSort('price')}>
+            <Text style={styles.textFilter(sort === 'price')}>Price</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.containerFilterContent(sort === 'id')}
+            onPress={() => this.handleSort('id')}>
+            <Text style={styles.textFilter(sort === 'id')}>ID</Text>
+          </TouchableOpacity>
+        </View>
         {this.state.faces && (
           <FlatList
             data={this.state.faces}
@@ -70,6 +94,9 @@ class Homepage extends React.Component {
             showsVerticalScrollIndicator={false}
           />
         )}
+        <View>
+          <Text>~ end of catalogue ~</Text>
+        </View>
       </View>
     );
   }

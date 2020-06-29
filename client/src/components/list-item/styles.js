@@ -29,11 +29,16 @@ export default StyleSheet.create({
   price: {
     fontSize: 20,
     color: '#2f3542',
-    marginBottom: 5,
+    marginVertical: 5,
     fontWeight: 'bold',
   },
   date: {
     fontSize: 12,
     color: '#747d8c',
+  },
+  textId: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#2f3542',
   },
 });
