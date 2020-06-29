@@ -7,5 +7,6 @@ export default StyleSheet.create({
   },
   containerList: {
     justifyContent: 'space-between',
+    paddingBottom: 50,
   },
 });

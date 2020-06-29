@@ -59,13 +59,15 @@ class Homepage extends React.Component {
     return (
       <View style={styles.container}>
         <Text>{this.state.title}</Text>
+        <Text>Filter</Text>
         {this.state.faces && (
           <FlatList
             data={this.state.faces}
             renderItem={({item}) => <ListItem key={item.key} {...item} />}
             keyExtractor={item => item.id}
-            numColumns={3}
+            numColumns={2}
             contentContainerStyle={styles.containerList}
+            showsVerticalScrollIndicator={false}
           />
         )}
       </View>

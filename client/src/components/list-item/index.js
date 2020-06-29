@@ -3,18 +3,24 @@ import {View, TouchableOpacity, Text} from 'react-native';
 
 import styles from './styles';
 
+import CustomButton from '../custom-button';
+
 const ListItem = ({size, price, face, date}) => {
+  const handleOnClick = input => {
+    console.log('input----', input);
+    alert(input);
+  };
   return (
-    <TouchableOpacity style={styles.container}>
-      <View>
-        <Text>{face}</Text>
+    <View style={styles.container}>
+      <View style={styles.containerFace}>
+        <Text style={[styles.face, {fontSize: size}]}>{face}</Text>
       </View>
-      <View>
-        <Text>{price}</Text>
-        <Text>{size}</Text>
-        {/* <Text>{date}</Text> */}
+      <View style={styles.containerDesc}>
+        <Text style={styles.price}>&#36;{price}</Text>
+        <Text style={styles.date}>Publish on {date}</Text>
       </View>
-    </TouchableOpacity>
+      <CustomButton handleOnClick={() => handleOnClick(price)} />
+    </View>
   );
 };
 
