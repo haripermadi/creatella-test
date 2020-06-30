@@ -7,7 +7,7 @@ export default StyleSheet.create({
   },
   containerList: {
     justifyContent: 'space-between',
-    paddingBottom: 150,
+    // paddingBottom: 150,
     // backgroundColor: 'yellow',
   },
   containerFilter: {
@@ -48,5 +48,19 @@ export default StyleSheet.create({
     fontSize: 12,
     color: '#2f3542',
     paddingVertical: 5,
+  },
+  containerEnd: {
+    backgroundColor: '#f1f2f6',
+    paddingVertical: 10,
+    borderRadius: 5,
+  },
+  textEnd: {
+    fontSize: 16,
+    color: '#2f3542',
+    textAlign: 'center',
+  },
+  iconEnd: {
+    fontSize: 12,
+    color: '#3742fa',
   },
 });

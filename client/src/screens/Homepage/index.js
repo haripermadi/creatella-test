@@ -5,6 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
+  Dimensions,
 } from 'react-native';
 import axios from 'axios';
 
@@ -24,6 +25,7 @@ class Homepage extends React.Component {
       limit: 20,
       sort: 'price',
       isLoadMore: false,
+      isLastData: true,
     };
   }
 
@@ -46,6 +48,12 @@ class Homepage extends React.Component {
         },
       });
       console.log('res----', response);
+      if (!response.data.length) {
+        this.setState({
+          isLoadMore: false,
+          isLastData: true,
+        });
+      }
       this.setState({
         faces: [...faces, ...response.data],
         isLoadMore: false,
@@ -69,6 +77,7 @@ class Homepage extends React.Component {
         sort: input,
         page: 1,
         faces: [],
+        isLastData: false,
       },
       () => {
         this.getAsciiFaces();
@@ -90,31 +99,46 @@ class Homepage extends React.Component {
   }
 
   handleLoadMore = () => {
-    console.log('loadmore-----------');
-    this.setState(
-      (prevState, nextProps) => ({
-        page: prevState.page + 1,
-        isLoadMore: true,
-      }),
-      () => {
-        this.getAsciiFaces();
-      },
-    );
+    console.log('loadmore-----------', this.state.isLastData);
+    if (!this.state.isLastData) {
+      this.setState(
+        (prevState, nextProps) => ({
+          page: prevState.page + 1,
+          isLoadMore: true,
+        }),
+        () => {
+          this.getAsciiFaces();
+        },
+      );
+    }
   };
 
   renderFooterLoad = () => {
-    if (!this.state.isLoadMore) return null;
-    return (
-      <View style={styles.containerFooterLoad}>
-        <ActivityIndicator size={'small'} color="#0000ff" />
-        <Text style={styles.loadingText}>Loading...</Text>
-      </View>
-    );
+    console.log('RENDERFOOTER--------------');
+    if (this.state.isLastData) {
+      console.log('RENDERFOOTER--------------in');
+      return (
+        <View style={styles.containerEnd}>
+          <Text style={styles.textEnd}>
+            ~ <Text style={styles.iconEnd}>┏༼ ◉ ╭╮ ◉༽┓</Text> end of catalogue ~
+          </Text>
+        </View>
+      );
+    } else {
+      if (!this.state.isLoadMore) return null;
+      return (
+        <View style={styles.containerFooterLoad}>
+          <ActivityIndicator size={'small'} color="#0000ff" />
+          <Text style={styles.loadingText}>Loading...</Text>
+        </View>
+      );
+    }
   };
 
   render() {
     console.log('state-----', this.state);
-    const {sort} = this.state;
+    const {sort, isLastData} = this.state;
+    const {height} = Dimensions.get('window');
     return (
       <View style={styles.container}>
         <Text style={[styles.title, styles.textCenter]}>
@@ -127,21 +151,27 @@ class Homepage extends React.Component {
           {this.renderFilterButton('id')}
         </View>
         {this.state.faces && (
-          <FlatList
-            data={this.state.faces}
-            renderItem={({item}) => <ListItem key={item.key} {...item} />}
-            keyExtractor={item => item.id}
-            numColumns={2}
-            contentContainerStyle={styles.containerList}
-            showsVerticalScrollIndicator={false}
-            onEndReachedThreshold={0.5}
-            onEndReached={this.handleLoadMore}
-            ListFooterComponent={this.renderFooterLoad}
-          />
+          <View style={{height: height * 0.8}}>
+            <FlatList
+              data={this.state.faces}
+              renderItem={({item}) => <ListItem key={item.key} {...item} />}
+              keyExtractor={item => item.id}
+              numColumns={2}
+              contentContainerStyle={styles.containerList}
+              showsVerticalScrollIndicator={false}
+              // onEndReachedThreshold={0.5}
+              // onEndReached={this.handleLoadMore}
+              ListFooterComponent={this.renderFooterLoad}
+              // extraData={this.state}
+              // initialNumToRender={10}
+            />
+          </View>
         )}
-        <View>
-          <Text>~ end of catalogue ~</Text>
-        </View>
+        {/* {isLastData && (
+          <View style={styles.containerEnd}>
+            <Text style={styles.title}>~ end of catalogue ~</Text>
+          </View>
+        )} */}
       </View>
     );
   }
