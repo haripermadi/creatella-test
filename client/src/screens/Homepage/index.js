@@ -1,5 +1,11 @@
 import React from 'react';
-import {View, Text, FlatList, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import axios from 'axios';
 
 import styles from './styles';
@@ -17,6 +23,7 @@ class Homepage extends React.Component {
       page: 1,
       limit: 20,
       sort: 'price',
+      isLoadMore: false,
     };
   }
 
@@ -25,8 +32,9 @@ class Homepage extends React.Component {
   }
 
   getAsciiFaces = async () => {
-    const {page, limit, sort} = this.state;
+    const {page, limit, sort, faces} = this.state;
     let url = `${BASE_URL}products`;
+    console.log('GETASCIIIFACE-----', page, faces);
     try {
       let response = await axios({
         method: 'GET',
@@ -39,7 +47,8 @@ class Homepage extends React.Component {
       });
       console.log('res----', response);
       this.setState({
-        faces: response.data,
+        faces: [...faces, ...response.data],
+        isLoadMore: false,
       });
     } catch (error) {
       console.log(error);
@@ -55,8 +64,53 @@ class Homepage extends React.Component {
   }
 
   handleSort(input) {
-    this.setState({sort: input});
+    this.setState(
+      {
+        sort: input,
+        page: 1,
+        faces: [],
+      },
+      () => {
+        this.getAsciiFaces();
+      },
+    );
   }
+
+  renderFilterButton(name) {
+    const {sort} = this.state;
+    return (
+      <TouchableOpacity
+        style={styles.containerFilterContent(sort === name)}
+        onPress={() => this.handleSort(name)}>
+        <Text style={styles.textFilter(sort === name)}>
+          {name[0].toUpperCase() + name.slice(1)}
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+
+  handleLoadMore = () => {
+    console.log('loadmore-----------');
+    this.setState(
+      (prevState, nextProps) => ({
+        page: prevState.page + 1,
+        isLoadMore: true,
+      }),
+      () => {
+        this.getAsciiFaces();
+      },
+    );
+  };
+
+  renderFooterLoad = () => {
+    if (!this.state.isLoadMore) return null;
+    return (
+      <View style={styles.containerFooterLoad}>
+        <ActivityIndicator size={'small'} color="#0000ff" />
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
+  };
 
   render() {
     console.log('state-----', this.state);
@@ -68,21 +122,9 @@ class Homepage extends React.Component {
         </Text>
         <View style={styles.containerFilter}>
           <Text style={styles.title}>Filter</Text>
-          <TouchableOpacity
-            style={styles.containerFilterContent(sort === 'size')}
-            onPress={() => this.handleSort('size')}>
-            <Text style={styles.textFilter(sort === 'size')}>Size</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.containerFilterContent(sort === 'price')]}
-            onPress={() => this.handleSort('price')}>
-            <Text style={styles.textFilter(sort === 'price')}>Price</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.containerFilterContent(sort === 'id')}
-            onPress={() => this.handleSort('id')}>
-            <Text style={styles.textFilter(sort === 'id')}>ID</Text>
-          </TouchableOpacity>
+          {this.renderFilterButton('size')}
+          {this.renderFilterButton('price')}
+          {this.renderFilterButton('id')}
         </View>
         {this.state.faces && (
           <FlatList
@@ -92,6 +134,9 @@ class Homepage extends React.Component {
             numColumns={2}
             contentContainerStyle={styles.containerList}
             showsVerticalScrollIndicator={false}
+            onEndReachedThreshold={0.5}
+            onEndReached={this.handleLoadMore}
+            ListFooterComponent={this.renderFooterLoad}
           />
         )}
         <View>

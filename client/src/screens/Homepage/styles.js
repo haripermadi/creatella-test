@@ -39,4 +39,14 @@ export default StyleSheet.create({
   activeFilter: {
     backgroundColor: '#3742fa',
   },
+  containerFooterLoad: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 5,
+  },
+  loadingText: {
+    fontSize: 12,
+    color: '#2f3542',
+    paddingVertical: 5,
+  },
 });
