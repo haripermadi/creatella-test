@@ -20,6 +20,10 @@ export default StyleSheet.create({
     color: '#2f3542',
     fontWeight: 'bold',
   },
+  subTitle: {
+    fontSize: 14,
+    color: '#2f3542',
+  },
   textCenter: {
     textAlign: 'center',
   },

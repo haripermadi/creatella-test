@@ -41,4 +41,16 @@ export default StyleSheet.create({
     fontSize: 16,
     color: '#2f3542',
   },
+  image: {
+    width: '100%',
+    height: 100,
+  },
+  containerImage: {
+    backgroundColor: '#ff4757',
+  },
+  textAds: {
+    fontSize: 16,
+    color: 'white',
+    textAlign: 'center',
+  },
 });

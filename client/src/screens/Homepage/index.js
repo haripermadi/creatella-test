@@ -25,7 +25,7 @@ class Homepage extends React.Component {
       limit: 20,
       sort: 'price',
       isLoadMore: false,
-      isLastData: true,
+      isLastData: false,
     };
   }
 
@@ -53,11 +53,21 @@ class Homepage extends React.Component {
           isLoadMore: false,
           isLastData: true,
         });
+      } else {
+        let ads = {
+          id: `ads-${response.data[0].id}`,
+          key: 'ads',
+          size: 10,
+          price: 10,
+          face: 'ads',
+          date: 'Sun Jun 30 2020 11:37:53 GMT+0700 (Western Indonesia Time)',
+          image: `http://localhost:3000/ads/?r=${response.data[0].id}`,
+        };
+        this.setState({
+          faces: [...faces, ...response.data.concat(ads)],
+          isLoadMore: false,
+        });
       }
-      this.setState({
-        faces: [...faces, ...response.data],
-        isLoadMore: false,
-      });
     } catch (error) {
       console.log(error);
     }
@@ -144,6 +154,11 @@ class Homepage extends React.Component {
         <Text style={[styles.title, styles.textCenter]}>
           {this.state.title}
         </Text>
+        <Text style={[styles.subTitle, styles.textCenter]}>
+          Here you're sure to find a bargain on some of the finest ascii
+          available to purchase. Be sure to peruse our selection of ascii faces
+          in an exciting range of sizes and prices.
+        </Text>
         <View style={styles.containerFilter}>
           <Text style={styles.title}>Filter</Text>
           {this.renderFilterButton('size')}
@@ -159,19 +174,14 @@ class Homepage extends React.Component {
               numColumns={2}
               contentContainerStyle={styles.containerList}
               showsVerticalScrollIndicator={false}
-              // onEndReachedThreshold={0.5}
-              // onEndReached={this.handleLoadMore}
+              onEndReachedThreshold={0.5}
+              onEndReached={this.handleLoadMore}
               ListFooterComponent={this.renderFooterLoad}
-              // extraData={this.state}
-              // initialNumToRender={10}
+              extraData={this.state}
+              initialNumToRender={10}
             />
           </View>
         )}
-        {/* {isLastData && (
-          <View style={styles.containerEnd}>
-            <Text style={styles.title}>~ end of catalogue ~</Text>
-          </View>
-        )} */}
       </View>
     );
   }
