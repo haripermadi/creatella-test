@@ -4,6 +4,7 @@ import {View, TouchableOpacity, Text} from 'react-native';
 import styles from './styles';
 
 import CustomButton from '../custom-button';
+import {formatDate} from '../../helper/index';
 
 const ListItem = ({id, size, price, face, date}) => {
   const handleOnClick = input => {
@@ -18,7 +19,7 @@ const ListItem = ({id, size, price, face, date}) => {
       <View style={styles.containerDesc}>
         <Text style={styles.textId}>{id}</Text>
         <Text style={styles.price}>&#36;{price / 100}</Text>
-        <Text style={styles.date}>Publish on {date}</Text>
+        <Text style={styles.date}>Publish on {formatDate(date)}</Text>
       </View>
       <CustomButton handleOnClick={() => handleOnClick(price)} />
     </View>
