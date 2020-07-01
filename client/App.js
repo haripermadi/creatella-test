@@ -23,17 +23,32 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 
-import Homepage from './src/screens/Homepage'
+import Homepage from './src/screens/Homepage';
+import Cartpage from './src/screens/Cartpage';
+
+const Stack = createStackNavigator();
 
 const App: () => React$Node = () => {
   return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <Homepage/>
-      </SafeAreaView>
-    </>
+    // <>
+    //   <StatusBar barStyle="dark-content" />
+    //   <SafeAreaView>
+    //     <Homepage/>
+    //   </SafeAreaView>
+    // </>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={Homepage}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen name="Cart" component={Cartpage} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 

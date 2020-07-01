@@ -7,6 +7,8 @@ import {
   ActivityIndicator,
   Dimensions,
   Image,
+  SafeAreaView,
+  StatusBar,
 } from 'react-native';
 import axios from 'axios';
 
@@ -154,60 +156,62 @@ class Homepage extends React.Component {
   };
 
   render() {
-    console.log('state-----', this.state);
+    console.log('state-----', this.state, this.props);
     const {sort, isLastData, isLoading, faces} = this.state;
     const {height} = Dimensions.get('window');
     return (
-      <View style={styles.container}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Text style={[styles.title, styles.textCenter]}>
-            {this.state.title}
+      <SafeAreaView>
+        <View style={styles.container}>
+          <View style={styles.containerHeader}>
+            <Text style={[styles.title, styles.textCenter]}>
+              {this.state.title}
+            </Text>
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate('Cart')}>
+              <Image
+                source={require('../../assets/cart.png')}
+                style={styles.cartIcon}
+              />
+              <View style={styles.containerCounter}>
+                <Text style={styles.textCount}>10</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <Text style={[styles.subTitle, styles.textCenter]}>
+            Here you're sure to find a bargain on some of the finest ascii
+            available to purchase. Be sure to peruse our selection of ascii
+            faces in an exciting range of sizes and prices.
           </Text>
-          <TouchableOpacity onPress={() => alert('cart')}>
-            <Image
-              source={require('../../assets/cart.png')}
-              style={{
-                width: 30,
-                height: 30,
-                resizeMode: 'contain',
-              }}
-            />
-          </TouchableOpacity>
-        </View>
-        <Text style={[styles.subTitle, styles.textCenter]}>
-          Here you're sure to find a bargain on some of the finest ascii
-          available to purchase. Be sure to peruse our selection of ascii faces
-          in an exciting range of sizes and prices.
-        </Text>
-        <View style={styles.containerFilter}>
-          <Text style={styles.title}>Filter</Text>
-          {this.renderFilterButton('size')}
-          {this.renderFilterButton('price')}
-          {this.renderFilterButton('id')}
-        </View>
-        {isLoading && (
-          <View style={styles.containerLoading}>
-            <ActivityIndicator size={'large'} color="#0000ff" />
+          <View style={styles.containerFilter}>
+            <Text style={styles.title}>Filter</Text>
+            {this.renderFilterButton('size')}
+            {this.renderFilterButton('price')}
+            {this.renderFilterButton('id')}
           </View>
-        )}
-        {faces && (
-          <View style={{height: height * 0.8}}>
-            <FlatList
-              data={this.state.faces}
-              renderItem={({item}) => <ListItem key={item.key} {...item} />}
-              keyExtractor={item => item.id}
-              numColumns={2}
-              contentContainerStyle={styles.containerList}
-              showsVerticalScrollIndicator={false}
-              onEndReachedThreshold={0.5}
-              onEndReached={this.handleLoadMore}
-              ListFooterComponent={this.renderFooterLoad}
-              extraData={this.state}
-              initialNumToRender={10}
-            />
-          </View>
-        )}
-      </View>
+          {isLoading && (
+            <View style={styles.containerLoading}>
+              <ActivityIndicator size={'large'} color="#0000ff" />
+            </View>
+          )}
+          {faces && (
+            <View style={{height: height * 0.8}}>
+              <FlatList
+                data={this.state.faces}
+                renderItem={({item}) => <ListItem key={item.key} {...item} />}
+                keyExtractor={item => item.id}
+                numColumns={2}
+                contentContainerStyle={styles.containerList}
+                showsVerticalScrollIndicator={false}
+                onEndReachedThreshold={0.5}
+                onEndReached={this.handleLoadMore}
+                ListFooterComponent={this.renderFooterLoad}
+                extraData={this.state}
+                initialNumToRender={10}
+              />
+            </View>
+          )}
+        </View>
+      </SafeAreaView>
     );
   }
 }

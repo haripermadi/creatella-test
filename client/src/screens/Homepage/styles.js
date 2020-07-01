@@ -4,6 +4,7 @@ export default StyleSheet.create({
   container: {
     backgroundColor: 'white',
     paddingHorizontal: 10,
+    position: 'relative',
   },
   containerList: {
     justifyContent: 'space-between',
@@ -69,5 +70,31 @@ export default StyleSheet.create({
   },
   containerLoading: {
     marginTop: 250,
+  },
+  cartIcon: {
+    width: 30,
+    height: 30,
+    resizeMode: 'contain',
+  },
+  containerHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+    marginHorizontal: 5,
+  },
+  containerCounter: {
+    backgroundColor: '#ff4757',
+    height: 20,
+    width: 20,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    right: -5,
+    top: 15,
+  },
+  textCount: {
+    color: 'white',
+    fontSize: 10,
   },
 });
