@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Dimensions,
+  Image,
 } from 'react-native';
 import axios from 'axios';
 
@@ -26,6 +27,7 @@ class Homepage extends React.Component {
       sort: 'price',
       isLoadMore: false,
       isLastData: false,
+      isLoading: false,
     };
   }
 
@@ -36,8 +38,13 @@ class Homepage extends React.Component {
   getAsciiFaces = async () => {
     const {page, limit, sort, faces} = this.state;
     let url = `${BASE_URL}products`;
-    console.log('GETASCIIIFACE-----', page, faces);
+    console.log('GETASCIIIFACE-----', page, faces, faces.length);
     try {
+      if (faces.length === 0) {
+        this.setState({
+          isLoading: true,
+        });
+      }
       let response = await axios({
         method: 'GET',
         url: url,
@@ -66,6 +73,7 @@ class Homepage extends React.Component {
         this.setState({
           faces: [...faces, ...response.data.concat(ads)],
           isLoadMore: false,
+          isLoading: false,
         });
       }
     } catch (error) {
@@ -147,13 +155,25 @@ class Homepage extends React.Component {
 
   render() {
     console.log('state-----', this.state);
-    const {sort, isLastData} = this.state;
+    const {sort, isLastData, isLoading, faces} = this.state;
     const {height} = Dimensions.get('window');
     return (
       <View style={styles.container}>
-        <Text style={[styles.title, styles.textCenter]}>
-          {this.state.title}
-        </Text>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <Text style={[styles.title, styles.textCenter]}>
+            {this.state.title}
+          </Text>
+          <TouchableOpacity onPress={() => alert('cart')}>
+            <Image
+              source={require('../../assets/cart.png')}
+              style={{
+                width: 30,
+                height: 30,
+                resizeMode: 'contain',
+              }}
+            />
+          </TouchableOpacity>
+        </View>
         <Text style={[styles.subTitle, styles.textCenter]}>
           Here you're sure to find a bargain on some of the finest ascii
           available to purchase. Be sure to peruse our selection of ascii faces
@@ -165,7 +185,12 @@ class Homepage extends React.Component {
           {this.renderFilterButton('price')}
           {this.renderFilterButton('id')}
         </View>
-        {this.state.faces && (
+        {isLoading && (
+          <View style={styles.containerLoading}>
+            <ActivityIndicator size={'large'} color="#0000ff" />
+          </View>
+        )}
+        {faces && (
           <View style={{height: height * 0.8}}>
             <FlatList
               data={this.state.faces}
