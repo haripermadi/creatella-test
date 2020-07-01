@@ -6,7 +6,7 @@ import styles from './styles';
 import CustomButton from '../custom-button';
 import {formatDate} from '../../helper/index';
 
-const ListItem = ({id, size, price, face, date, image}) => {
+const ListItem = ({id, size, price, face, date, image, handleAddToCart}) => {
   const handleOnClick = input => {
     console.log('input----', input);
     alert(input);
@@ -38,7 +38,7 @@ const ListItem = ({id, size, price, face, date, image}) => {
         <Text style={styles.price}>&#36;{price / 100}</Text>
         <Text style={styles.date}>Publish on {formatDate(date)}</Text>
       </View>
-      <CustomButton handleOnClick={() => handleOnClick(price)} />
+      <CustomButton handleOnClick={handleAddToCart} title={'Add to car'} />
     </View>
   );
 };

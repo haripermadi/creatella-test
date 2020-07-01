@@ -30,6 +30,8 @@ class Homepage extends React.Component {
       isLoadMore: false,
       isLastData: false,
       isLoading: false,
+      carts: [],
+      cartCount: 0,
     };
   }
 
@@ -155,9 +157,29 @@ class Homepage extends React.Component {
     }
   };
 
+  handleAddToCart = input => {
+    const existingCartItem = this.state.carts.find(
+      item => item.id === input.id,
+    );
+    console.log('existitem--------->', existingCartItem);
+    if (existingCartItem) {
+      let currentCartItems = this.state.carts.map(item =>
+        item.id === input.id ? {...item, quantity: item.quantity + 1} : item,
+      );
+      console.log('currentite,------------>', currentCartItems);
+      this.setState({
+        carts: currentCartItems,
+      });
+    } else {
+      this.setState({
+        carts: [...this.state.carts, {...input, quantity: 1}],
+      });
+    }
+  };
+
   render() {
     console.log('state-----', this.state, this.props);
-    const {sort, isLastData, isLoading, faces} = this.state;
+    const {sort, isLastData, isLoading, faces, carts} = this.state;
     const {height} = Dimensions.get('window');
     return (
       <SafeAreaView>
@@ -167,13 +189,17 @@ class Homepage extends React.Component {
               {this.state.title}
             </Text>
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('Cart')}>
+              onPress={() =>
+                this.props.navigation.navigate('Cart', {
+                  items: carts,
+                })
+              }>
               <Image
                 source={require('../../assets/cart.png')}
                 style={styles.cartIcon}
               />
               <View style={styles.containerCounter}>
-                <Text style={styles.textCount}>10</Text>
+                <Text style={styles.textCount}>{this.state.cartCount}</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -197,7 +223,13 @@ class Homepage extends React.Component {
             <View style={{height: height * 0.8}}>
               <FlatList
                 data={this.state.faces}
-                renderItem={({item}) => <ListItem key={item.key} {...item} />}
+                renderItem={({item}) => (
+                  <ListItem
+                    key={item.key}
+                    {...item}
+                    handleAddToCart={() => this.handleAddToCart(item)}
+                  />
+                )}
                 keyExtractor={item => item.id}
                 numColumns={2}
                 contentContainerStyle={styles.containerList}

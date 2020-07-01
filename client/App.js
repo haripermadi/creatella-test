@@ -40,7 +40,7 @@ const App: () => React$Node = () => {
     //   </SafeAreaView>
     // </>
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="Home">
         <Stack.Screen
           name="Home"
           component={Homepage}
