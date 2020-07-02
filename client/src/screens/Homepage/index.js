@@ -20,6 +20,7 @@ import {
   fetchProductsAsync,
   fetchProductsSortAsync,
 } from '../../redux/product/product.actions';
+import {addItemToCart} from '../../redux/cart/cart.actions';
 
 const BASE_URL = 'http://localhost:3000/';
 
@@ -41,7 +42,7 @@ class Homepage extends React.Component {
   }
 
   componentDidMount() {
-    this.getAsciiFaces();
+    this.getAsciiFaces('sort');
   }
 
   getAsciiFaces = (type = 'normal') => {
@@ -132,23 +133,24 @@ class Homepage extends React.Component {
   };
 
   handleAddToCart = input => {
-    const existingCartItem = this.state.carts.find(
-      item => item.id === input.id,
-    );
-    console.log('existitem--------->', existingCartItem);
-    if (existingCartItem) {
-      let currentCartItems = this.state.carts.map(item =>
-        item.id === input.id ? {...item, quantity: item.quantity + 1} : item,
-      );
-      console.log('currentite,------------>', currentCartItems);
-      this.setState({
-        carts: currentCartItems,
-      });
-    } else {
-      this.setState({
-        carts: [...this.state.carts, {...input, quantity: 1}],
-      });
-    }
+    // const existingCartItem = this.state.carts.find(
+    //   item => item.id === input.id,
+    // );
+    // console.log('existitem--------->', existingCartItem);
+    // if (existingCartItem) {
+    //   let currentCartItems = this.state.carts.map(item =>
+    //     item.id === input.id ? {...item, quantity: item.quantity + 1} : item,
+    //   );
+    //   console.log('currentite,------------>', currentCartItems);
+    //   this.setState({
+    //     carts: currentCartItems,
+    //   });
+    // } else {
+    //   this.setState({
+    //     carts: [...this.state.carts, {...input, quantity: 1}],
+    //   });
+    // }
+    this.props.addItemToCart(input);
   };
 
   render() {
@@ -164,11 +166,7 @@ class Homepage extends React.Component {
               {this.state.title}
             </Text>
             <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate('Cart', {
-                  items: carts,
-                })
-              }>
+              onPress={() => this.props.navigation.navigate('Cart')}>
               <Image
                 source={require('../../assets/cart.png')}
                 style={styles.cartIcon}
@@ -234,6 +232,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   getProductLists: input => dispatch(fetchProductsAsync(input)),
   getProductSort: input => dispatch(fetchProductsSortAsync(input)),
+  addItemToCart: input => dispatch(addItemToCart(input)),
 });
 
 export default connect(

@@ -44,7 +44,7 @@ const App: () => React$Node = () => {
     // </>
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
+        <Stack.Navigator>
           <Stack.Screen
             name="Home"
             component={Homepage}

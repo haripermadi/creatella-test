@@ -1,10 +1,12 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, FlatList} from 'react-native';
+import {connect} from 'react-redux';
 
 import styles from './styles';
 
 import CustomButton from '../../components/custom-button';
 import CartItem from '../../components/cart-item';
+import {getTotalPrice} from '../../redux/cart/cart.actions';
 
 class CartPage extends React.Component {
   constructor(props) {
@@ -14,9 +16,13 @@ class CartPage extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.props.getTotalPrice();
+  }
+
   render() {
     console.log('cartpage--------->', this.props);
-    const {items} = this.props.route.params;
+    const {carts, total} = this.props;
     return (
       <View style={styles.container}>
         <View style={styles.containerHeader}>
@@ -24,14 +30,14 @@ class CartPage extends React.Component {
         </View>
         <View style={styles.containerFlatList}>
           <FlatList
-            data={items}
+            data={carts}
             renderItem={({item}) => <CartItem key={item.key} {...item} />}
             keyExtractor={item => item.id}
             showsVerticalScrollIndicator={false}
-            extraData={this.state}
+            extraData={this.props}
           />
           <View style={styles.containerTotal}>
-            <Text style={styles.textLarge}>Total: &#36;1000</Text>
+            <Text style={styles.textLarge}>Total: &#36;{total / 100}</Text>
           </View>
         </View>
         <CustomButton
@@ -43,4 +49,18 @@ class CartPage extends React.Component {
   }
 }
 
-export default CartPage;
+const mapStateToProps = state => {
+  return {
+    carts: state.cart.carts,
+    total: state.cart.total,
+  };
+};
+
+const mapDispatchToProps = dispatch => ({
+  getTotalPrice: () => dispatch(getTotalPrice()),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(CartPage);

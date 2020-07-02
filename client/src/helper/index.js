@@ -28,3 +28,21 @@ export const formatDate = date => {
     return `${diff} ${diff > 1 ? 'seconds' : 'second'} ago`;
   }
 };
+
+export const addToCart = (currentCart, inputCart) => {
+  const existingCartItem = currentCart.find(item => item.id === inputCart.id);
+  console.log('existitem--------->', existingCartItem);
+  if (existingCartItem) {
+    let currentCartItems = currentCart.map(item =>
+      item.id === inputCart.id ? {...item, quantity: item.quantity + 1} : item,
+    );
+    console.log('currentite,------------>', currentCartItems);
+    return currentCartItems;
+  } else {
+    return [...currentCart, {...inputCart, quantity: 1}];
+  }
+};
+
+export const totalPrice = carts => {
+  return carts.reduce((acc, cumm) => acc + cumm.quantity * cumm.price, 0);
+};
