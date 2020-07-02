@@ -59,3 +59,7 @@ export const reduceCartItem = (currentCart, removedItem) => {
   );
   return currentCartItems;
 };
+
+export const totalItem = carts => {
+  return carts.reduce((acc, cumm) => acc + cumm.quantity, 0);
+};

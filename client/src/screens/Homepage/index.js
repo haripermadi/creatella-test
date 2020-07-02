@@ -21,6 +21,7 @@ import {
   fetchProductsSortAsync,
 } from '../../redux/product/product.actions';
 import {addItemToCart} from '../../redux/cart/cart.actions';
+import {totalItem} from '../../helper';
 
 const BASE_URL = 'http://localhost:3000/';
 
@@ -133,30 +134,12 @@ class Homepage extends React.Component {
   };
 
   handleAddToCart = input => {
-    // const existingCartItem = this.state.carts.find(
-    //   item => item.id === input.id,
-    // );
-    // console.log('existitem--------->', existingCartItem);
-    // if (existingCartItem) {
-    //   let currentCartItems = this.state.carts.map(item =>
-    //     item.id === input.id ? {...item, quantity: item.quantity + 1} : item,
-    //   );
-    //   console.log('currentite,------------>', currentCartItems);
-    //   this.setState({
-    //     carts: currentCartItems,
-    //   });
-    // } else {
-    //   this.setState({
-    //     carts: [...this.state.carts, {...input, quantity: 1}],
-    //   });
-    // }
     this.props.addItemToCart(input);
   };
 
   render() {
     console.log('state--home---', this.state, this.props);
-    const {carts} = this.state;
-    const {faces, isLoading} = this.props;
+    const {faces, isLoading, carts} = this.props;
     const {height} = Dimensions.get('window');
     return (
       <SafeAreaView>
@@ -172,7 +155,7 @@ class Homepage extends React.Component {
                 style={styles.cartIcon}
               />
               <View style={styles.containerCounter}>
-                <Text style={styles.textCount}>{this.state.cartCount}</Text>
+                <Text style={styles.textCount}>{totalItem(carts)}</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -226,6 +209,7 @@ const mapStateToProps = state => {
     faces: state.product.products,
     isLoading: state.product.isLoading,
     isLastData: state.product.isLastData,
+    carts: state.cart.carts,
   };
 };
 
