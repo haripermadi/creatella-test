@@ -46,3 +46,16 @@ export const addToCart = (currentCart, inputCart) => {
 export const totalPrice = carts => {
   return carts.reduce((acc, cumm) => acc + cumm.quantity * cumm.price, 0);
 };
+
+export const reduceCartItem = (currentCart, removedItem) => {
+  const existingCartItem = currentCart.find(item => item.id === removedItem.id);
+
+  if (existingCartItem.quantity === 1) {
+    return currentCart.filter(item => item.id !== removedItem.id);
+  }
+
+  let currentCartItems = currentCart.map(item =>
+    item.id === removedItem.id ? {...item, quantity: item.quantity - 1} : item,
+  );
+  return currentCartItems;
+};

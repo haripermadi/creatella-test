@@ -1,9 +1,8 @@
 import cartActionTypes from './cart.types';
-import {addToCart, totalPrice} from '../../helper';
+import {addToCart, reduceCartItem} from '../../helper';
 
 const INITIAL_STATE = {
   carts: [],
-  total: 0,
 };
 
 const cartReducer = (state = INITIAL_STATE, action) => {
@@ -13,11 +12,10 @@ const cartReducer = (state = INITIAL_STATE, action) => {
         ...state,
         carts: addToCart(state.carts, action.payload),
       };
-
-    case cartActionTypes.GET_TOTAL_PRICE:
+    case cartActionTypes.REDUCE_ITEM:
       return {
         ...state,
-        total: totalPrice(state.carts),
+        carts: reduceCartItem(state.carts, action.payload),
       };
 
     default:
