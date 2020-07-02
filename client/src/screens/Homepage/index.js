@@ -11,10 +11,15 @@ import {
   StatusBar,
 } from 'react-native';
 import axios from 'axios';
+import {connect} from 'react-redux';
 
 import styles from './styles';
 
 import ListItem from '../../components/list-item';
+import {
+  fetchProductsAsync,
+  fetchProductsSortAsync,
+} from '../../redux/product/product.actions';
 
 const BASE_URL = 'http://localhost:3000/';
 
@@ -39,49 +44,18 @@ class Homepage extends React.Component {
     this.getAsciiFaces();
   }
 
-  getAsciiFaces = async () => {
+  getAsciiFaces = (type = 'normal') => {
     const {page, limit, sort, faces} = this.state;
-    let url = `${BASE_URL}products`;
-    console.log('GETASCIIIFACE-----', page, faces, faces.length);
-    try {
-      if (faces.length === 0) {
-        this.setState({
-          isLoading: true,
-        });
-      }
-      let response = await axios({
-        method: 'GET',
-        url: url,
-        params: {
-          _page: page,
-          _limit: limit,
-          _sort: sort,
-        },
-      });
-      console.log('res----', response);
-      if (!response.data.length) {
-        this.setState({
-          isLoadMore: false,
-          isLastData: true,
-        });
-      } else {
-        let ads = {
-          id: `ads-${response.data[0].id}`,
-          key: 'ads',
-          size: 10,
-          price: 10,
-          face: 'ads',
-          date: 'Sun Jun 30 2020 11:37:53 GMT+0700 (Western Indonesia Time)',
-          image: `http://localhost:3000/ads/?r=${response.data[0].id}`,
-        };
-        this.setState({
-          faces: [...faces, ...response.data.concat(ads)],
-          isLoadMore: false,
-          isLoading: false,
-        });
-      }
-    } catch (error) {
-      console.log(error);
+    let input = {
+      _page: page,
+      _limit: limit,
+      _sort: sort,
+    };
+
+    if (type === 'sort') {
+      this.props.getProductSort(input);
+    } else {
+      this.props.getProductLists(input);
     }
   };
 
@@ -102,7 +76,7 @@ class Homepage extends React.Component {
         isLastData: false,
       },
       () => {
-        this.getAsciiFaces();
+        this.getAsciiFaces('sort');
       },
     );
   }
@@ -121,8 +95,8 @@ class Homepage extends React.Component {
   }
 
   handleLoadMore = () => {
-    console.log('loadmore-----------', this.state.isLastData);
-    if (!this.state.isLastData) {
+    console.log('loadmore-----------', this.props.isLastData);
+    if (!this.props.isLastData) {
       this.setState(
         (prevState, nextProps) => ({
           page: prevState.page + 1,
@@ -136,8 +110,8 @@ class Homepage extends React.Component {
   };
 
   renderFooterLoad = () => {
-    console.log('RENDERFOOTER--------------');
-    if (this.state.isLastData) {
+    console.log('RENDERFOOTER--------------', this.props);
+    if (this.props.isLastData) {
       console.log('RENDERFOOTER--------------in');
       return (
         <View style={styles.containerEnd}>
@@ -147,7 +121,7 @@ class Homepage extends React.Component {
         </View>
       );
     } else {
-      if (!this.state.isLoadMore) return null;
+      if (!this.props.isLoading) return null;
       return (
         <View style={styles.containerFooterLoad}>
           <ActivityIndicator size={'small'} color="#0000ff" />
@@ -178,8 +152,9 @@ class Homepage extends React.Component {
   };
 
   render() {
-    console.log('state-----', this.state, this.props);
-    const {sort, isLastData, isLoading, faces, carts} = this.state;
+    console.log('state--home---', this.state, this.props);
+    const {carts} = this.state;
+    const {faces, isLoading} = this.props;
     const {height} = Dimensions.get('window');
     return (
       <SafeAreaView>
@@ -214,15 +189,15 @@ class Homepage extends React.Component {
             {this.renderFilterButton('price')}
             {this.renderFilterButton('id')}
           </View>
-          {isLoading && (
+          {/* {isLoading && (
             <View style={styles.containerLoading}>
               <ActivityIndicator size={'large'} color="#0000ff" />
             </View>
-          )}
+          )} */}
           {faces && (
             <View style={{height: height * 0.8}}>
               <FlatList
-                data={this.state.faces}
+                data={faces}
                 renderItem={({item}) => (
                   <ListItem
                     key={item.key}
@@ -237,7 +212,7 @@ class Homepage extends React.Component {
                 onEndReachedThreshold={0.5}
                 onEndReached={this.handleLoadMore}
                 ListFooterComponent={this.renderFooterLoad}
-                extraData={this.state}
+                extraData={this.props}
                 initialNumToRender={10}
               />
             </View>
@@ -248,4 +223,20 @@ class Homepage extends React.Component {
   }
 }
 
-export default Homepage;
+const mapStateToProps = state => {
+  return {
+    faces: state.product.products,
+    isLoading: state.product.isLoading,
+    isLastData: state.product.isLastData,
+  };
+};
+
+const mapDispatchToProps = dispatch => ({
+  getProductLists: input => dispatch(fetchProductsAsync(input)),
+  getProductSort: input => dispatch(fetchProductsSortAsync(input)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Homepage);

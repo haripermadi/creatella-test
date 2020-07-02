@@ -25,9 +25,12 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {Provider} from 'react-redux';
 
 import Homepage from './src/screens/Homepage';
 import Cartpage from './src/screens/Cartpage';
+
+import store from './src/redux/store';
 
 const Stack = createStackNavigator();
 
@@ -39,16 +42,18 @@ const App: () => React$Node = () => {
     //     <Homepage/>
     //   </SafeAreaView>
     // </>
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen
-          name="Home"
-          component={Homepage}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen name="Cart" component={Cartpage} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home">
+          <Stack.Screen
+            name="Home"
+            component={Homepage}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen name="Cart" component={Cartpage} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 };
 
