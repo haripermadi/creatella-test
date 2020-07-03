@@ -34,7 +34,7 @@ const ListItem = ({id, size, price, face, date, image, handleAddToCart}) => {
         <Text style={styles.price}>&#36;{price / 100}</Text>
         <Text style={styles.date}>Publish on {formatDate(date)}</Text>
       </View>
-      <CustomButton handleOnClick={handleAddToCart} title={'Add to car'} />
+      <CustomButton handleOnClick={handleAddToCart} title={'Add to cart'} />
     </View>
   );
 };
