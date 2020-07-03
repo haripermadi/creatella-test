@@ -21,14 +21,13 @@ class CartPage extends React.Component {
     Alert.alert('Checkout', 'Thank you for shopping with us!', [
       {
         text: 'OK',
-        onPress: () => this.props.navigation.navigate('Home'),
+        onPress: () => {
+          this.props.navigation.navigate('Home');
+          this.props.cleanCart();
+        },
       },
     ]);
   };
-
-  componentWillUnmount() {
-    this.props.cleanCart();
-  }
 
   render() {
     // console.log('cartpage--------->', this.props);
