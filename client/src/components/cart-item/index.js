@@ -7,7 +7,7 @@ import {addItemToCart, reduceItem} from '../../redux/cart/cart.actions';
 import styles from './styles';
 
 const CartItem = ({itemCart, addItemToCart, reduceItemFromCart}) => {
-  console.log('cartitem========', itemCart);
+  // console.log('cartitem========', itemCart);
   const {id, size, price, face, quantity} = itemCart;
   return (
     <View style={styles.containerItem}>

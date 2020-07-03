@@ -7,10 +7,6 @@ import CustomButton from '../custom-button';
 import {formatDate} from '../../helper/index';
 
 const ListItem = ({id, size, price, face, date, image, handleAddToCart}) => {
-  const handleOnClick = input => {
-    console.log('input----', input);
-    alert(input);
-  };
   if (image) {
     return (
       <View style={[styles.container, styles.containerImage]}>

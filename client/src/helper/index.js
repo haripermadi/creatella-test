@@ -31,12 +31,12 @@ export const formatDate = date => {
 
 export const addToCart = (currentCart, inputCart) => {
   const existingCartItem = currentCart.find(item => item.id === inputCart.id);
-  console.log('existitem--------->', existingCartItem);
+  // console.log('existitem--------->', existingCartItem);
   if (existingCartItem) {
     let currentCartItems = currentCart.map(item =>
       item.id === inputCart.id ? {...item, quantity: item.quantity + 1} : item,
     );
-    console.log('currentite,------------>', currentCartItems);
+    // console.log('currentite,------------>', currentCartItems);
     return currentCartItems;
   } else {
     return [...currentCart, {...inputCart, quantity: 1}];

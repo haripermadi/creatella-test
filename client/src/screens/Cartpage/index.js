@@ -1,12 +1,12 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, FlatList} from 'react-native';
+import {View, Text, FlatList, Alert} from 'react-native';
 import {connect} from 'react-redux';
 
 import styles from './styles';
 
 import CustomButton from '../../components/custom-button';
 import CartItem from '../../components/cart-item';
-import {getTotalPrice, reduceItem} from '../../redux/cart/cart.actions';
+import {cleanCart} from '../../redux/cart/cart.actions';
 import {totalPrice} from '../../helper';
 
 class CartPage extends React.Component {
@@ -17,9 +17,22 @@ class CartPage extends React.Component {
     };
   }
 
+  handleCheckout = () => {
+    Alert.alert('Checkout', 'Thank you for shopping with us!', [
+      {
+        text: 'OK',
+        onPress: () => this.props.navigation.navigate('Home'),
+      },
+    ]);
+  };
+
+  componentWillUnmount() {
+    this.props.cleanCart();
+  }
+
   render() {
-    console.log('cartpage--------->', this.props);
-    const {carts, total} = this.props;
+    // console.log('cartpage--------->', this.props);
+    const {carts} = this.props;
     return (
       <View style={styles.container}>
         <View style={styles.containerHeader}>
@@ -39,10 +52,12 @@ class CartPage extends React.Component {
             </Text>
           </View>
         </View>
-        <CustomButton
-          title={'Checkout'}
-          handleOnClick={() => alert('Thank you for shopping with us')}
-        />
+        {carts.length > 0 && (
+          <CustomButton
+            title={'Checkout'}
+            handleOnClick={this.handleCheckout}
+          />
+        )}
       </View>
     );
   }
@@ -51,8 +66,14 @@ class CartPage extends React.Component {
 const mapStateToProps = state => {
   return {
     carts: state.cart.carts,
-    total: state.cart.total,
   };
 };
 
-export default connect(mapStateToProps)(CartPage);
+const mapDispatchToProps = dispatch => ({
+  cleanCart: () => dispatch(cleanCart()),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(CartPage);

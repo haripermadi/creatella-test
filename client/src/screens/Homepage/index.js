@@ -8,9 +8,7 @@ import {
   Dimensions,
   Image,
   SafeAreaView,
-  StatusBar,
 } from 'react-native';
-import axios from 'axios';
 import {connect} from 'react-redux';
 
 import styles from './styles';
@@ -23,14 +21,11 @@ import {
 import {addItemToCart} from '../../redux/cart/cart.actions';
 import {totalItem} from '../../helper';
 
-const BASE_URL = 'http://localhost:3000/';
-
 class Homepage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       title: 'Ascii Faces Store',
-      faces: [],
       page: 1,
       limit: 20,
       sort: 'price',
@@ -47,7 +42,7 @@ class Homepage extends React.Component {
   }
 
   getAsciiFaces = (type = 'normal') => {
-    const {page, limit, sort, faces} = this.state;
+    const {page, limit, sort} = this.state;
     let input = {
       _page: page,
       _limit: limit,
@@ -97,7 +92,7 @@ class Homepage extends React.Component {
   }
 
   handleLoadMore = () => {
-    console.log('loadmore-----------', this.props.isLastData);
+    // console.log('loadmore-----------', this.props.isLastData);
     if (!this.props.isLastData) {
       this.setState(
         (prevState, nextProps) => ({
@@ -112,9 +107,9 @@ class Homepage extends React.Component {
   };
 
   renderFooterLoad = () => {
-    console.log('RENDERFOOTER--------------', this.props);
+    // console.log('RENDERFOOTER--------------', this.props);
     if (this.props.isLastData) {
-      console.log('RENDERFOOTER--------------in');
+      // console.log('RENDERFOOTER--------------in');
       return (
         <View style={styles.containerEnd}>
           <Text style={styles.textEnd}>
@@ -138,7 +133,7 @@ class Homepage extends React.Component {
   };
 
   render() {
-    console.log('state--home---', this.state, this.props);
+    // console.log('state--home---', this.state, this.props);
     const {faces, isLoading, carts} = this.props;
     const {height} = Dimensions.get('window');
     return (

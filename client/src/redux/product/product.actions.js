@@ -38,7 +38,7 @@ export const fetchProductsAsync = input => {
         url: url,
         params: input,
       });
-      console.log('res----', response);
+      // console.log('res----', response);
       if (!response.data.length) {
         dispatch(fetchProductsSuccessLast());
       } else {
@@ -51,7 +51,7 @@ export const fetchProductsAsync = input => {
           date: 'Sun Jun 30 2020 11:37:53 GMT+0700 (Western Indonesia Time)',
           image: `http://localhost:3000/ads/?r=${response.data[0].id}`,
         };
-        dispatch(fetchProductsSuccess(response.data.concat(ads)));
+        dispatch(fetchProductsSuccess([...response.data, ads]));
       }
     } catch (error) {
       dispatch(fetchProductsFail(error.message));
